@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Bouquet For You</title>
+<style>
+:root{--r1:#ff6b81;--r2:#e63950;--r3:#a8132b;--bg1:#2a0a1a;--bg2:#6b1d3a;--card:#fff8f3;--ink:#5a1730}
+*{box-sizing:border-box;margin:0}
+body{min-height:100vh;font-family:'Playfair Display',Georgia,serif;color:#fff;background:radial-gradient(circle at 50% 20%,var(--bg2),var(--bg1) 75%);display:flex;align-items:center;justify-content:center;padding:20px;overflow-x:hidden}
+.script{font-family:'Great Vibes','Brush Script MT',cursive;font-weight:400}
+.screen{display:none;width:100%;max-width:440px;text-align:center;animation:fade .9s ease;position:relative;z-index:1}
+.screen.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+h1{font-size:2.8rem;line-height:1.1;margin:6px 0 8px}
+p.sub{opacity:.85;font-style:italic;margin-bottom:20px}
+.bq{width:min(300px,78vw);margin:0 auto;display:block;filter:drop-shadow(0 12px 24px rgba(0,0,0,.45));animation:sway 5s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes sway{50%{transform:rotate(1.8deg)}}
+button{font:inherit;cursor:pointer;border:0;border-radius:50px;padding:13px 30px;background:linear-gradient(135deg,#ff8fa3,#e63950);color:#fff;font-size:1.05rem;box-shadow:0 6px 20px rgba(230,57,80,.45);transition:transform .2s}
+button:hover{transform:translateY(-2px) scale(1.03)}
+button.ghost{background:transparent;border:1px solid rgba(255,255,255,.5);box-shadow:none;padding:9px 20px;font-size:.9rem}
+.card,.letter{background:var(--card);color:var(--ink);border-radius:22px;padding:26px 22px;box-shadow:0 20px 50px rgba(0,0,0,.45);text-align:left}
+.card h2{text-align:center;font-size:2.1rem;margin-bottom:14px;color:#c9254a}
+label{display:block;font-size:.85rem;margin:12px 0 5px;font-weight:600}
+input,textarea,select{width:100%;font:inherit;font-size:.95rem;padding:11px 13px;border:1px solid #e8c3cb;border-radius:12px;background:#fff;color:var(--ink)}
+textarea{min-height:100px;resize:vertical}
+.swatches{display:flex;gap:12px;margin-top:4px}
+.sw{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px #e8c3cb;padding:0}
+.sw.sel{box-shadow:0 0 0 3px #c9254a}
+.err{color:#c9254a;font-size:.8rem;min-height:1em;margin-top:6px}
+.center{text-align:center;margin-top:18px}
+.letter{margin-top:6px}
+.letter .to{font-size:2.3rem;color:#c9254a}
+.letter .msg{margin:12px 0;line-height:1.7;font-size:1.05rem;white-space:pre-wrap}
+.letter .from{font-size:1.8rem;color:#c9254a;text-align:right}
+.letter img{max-width:100%;max-height:230px;border-radius:14px;border:6px solid #fff;box-shadow:0 6px 18px rgba(0,0,0,.25);margin:8px 0}
+.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:18px}
+.petal{position:fixed;top:-30px;width:14px;height:18px;border-radius:70% 0 70% 0;opacity:.85;pointer-events:none;animation:fall linear forwards;z-index:0}
+@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(540deg)}}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#fff;color:var(--ink);padding:10px 20px;border-radius:30px;font-size:.9rem;opacity:0;transition:.3s;z-index:9;pointer-events:none}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<radialGradient id="pg" cx="50%" cy="100%" r="100%"><stop offset="0" style="stop-color:var(--r3)"/><stop offset=".55" style="stop-color:var(--r2)"/><stop offset="1" style="stop-color:var(--r1)"/></radialGradient>
+<radialGradient id="pg2" cx="50%" cy="100%" r="100%"><stop offset="0" style="stop-color:var(--r2)"/><stop offset="1" style="stop-color:var(--r1)"/></radialGradient>
+<radialGradient id="bl" cx="50%" cy="100%" r="100%"><stop offset="0" stop-color="#f06292"/><stop offset=".5" stop-color="#ffb3cf"/><stop offset="1" stop-color="#fff5f8"/></radialGradient>
+<path id="pt" d="M0 0C-30 -8 -36 -40 0 -47C36 -40 30 -8 0 0Z"/>
+<symbol id="rose" viewBox="-50 -50 100 100">
+  <circle r="47" fill="var(--r3)" opacity=".55"/>
+  <g stroke="var(--r3)" stroke-opacity=".35" stroke-width="1">
+    <use href="#pt" fill="url(#pg)" transform="rotate(0)"/><use href="#pt" fill="url(#pg)" transform="rotate(72)"/><use href="#pt" fill="url(#pg)" transform="rotate(144)"/><use href="#pt" fill="url(#pg)" transform="rotate(216)"/><use href="#pt" fill="url(#pg)" transform="rotate(288)"/>
+    <g transform="scale(.74)"><use href="#pt" fill="url(#pg2)" transform="rotate(36)"/><use href="#pt" fill="url(#pg2)" transform="rotate(108)"/><use href="#pt" fill="url(#pg2)" transform="rotate(180)"/><use href="#pt" fill="url(#pg2)" transform="rotate(252)"/><use href="#pt" fill="url(#pg2)" transform="rotate(324)"/></g>
+    <g transform="scale(.46)"><use href="#pt" fill="url(#pg)" transform="rotate(10)"/><use href="#pt" fill="url(#pg)" transform="rotate(100)"/><use href="#pt" fill="url(#pg)" transform="rotate(190)"/><use href="#pt" fill="url(#pg)" transform="rotate(280)"/></g>
+  </g>
+  <path d="M-6 2C-8 -8 6 -10 8 -2C9 6 -2 9 -5 3" fill="none" stroke="var(--r3)" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+  <ellipse cx="-14" cy="-24" rx="9" ry="5" fill="#fff" opacity=".25" transform="rotate(-35 -14 -24)"/>
+  <ellipse cx="16" cy="-14" rx="5" ry="3" fill="#fff" opacity=".18" transform="rotate(30 16 -14)"/>
+</symbol>
+<path id="bp" d="M0 0C-13 -8 -17 -28 -7 -38L0 -32L7 -38C17 -28 13 -8 0 0Z"/>
+<symbol id="blossom" viewBox="-40 -40 80 80">
+  <g stroke="#e8749f" stroke-opacity=".5" stroke-width=".8" fill="url(#bl)">
+    <use href="#bp" transform="rotate(0)"/><use href="#bp" transform="rotate(72)"/><use href="#bp" transform="rotate(144)"/><use href="#bp" transform="rotate(216)"/><use href="#bp" transform="rotate(288)"/>
+  </g>
+  <circle r="6" fill="#d6336c"/>
+  <g stroke="#d6336c" stroke-width="1.2" fill="#ffd54f"><path d="M0 0L-12 -10M0 0L2 -15M0 0L13 -9M0 0L10 8M0 0L-9 10" fill="none"/><circle cx="-12" cy="-10" r="2"/><circle cx="2" cy="-15" r="2"/><circle cx="13" cy="-9" r="2"/><circle cx="10" cy="8" r="2"/><circle cx="-9" cy="10" r="2"/></g>
+</symbol>
+<symbol id="leaf" viewBox="0 0 40 80"><path d="M20 78C-6 50 2 16 20 2C38 16 46 50 20 78Z" fill="#2f7d4f"/><path d="M20 76V8" stroke="#1e5c38" stroke-width="2" fill="none"/></symbol>
+</defs>
+</svg>
+
+<template id="bqT">
+<svg viewBox="0 0 300 380" class="bq">
+  <g stroke="#2f7d4f" stroke-width="6" stroke-linecap="round" fill="none">
+    <path d="M150 360C120 280 90 200 80 140"/><path d="M150 360C140 270 140 200 150 110"/><path d="M150 360C180 280 215 210 222 140"/><path d="M150 360C100 300 60 250 48 200"/><path d="M150 360C200 300 245 255 255 205"/><path d="M150 360C130 300 120 240 112 70" stroke-width="4"/><path d="M150 360C170 300 185 240 196 70" stroke-width="4"/>
+  </g>
+  <use href="#leaf" x="40" y="215" width="46" height="92" transform="rotate(-55 63 260)"/>
+  <use href="#leaf" x="212" y="215" width="46" height="92" transform="rotate(55 235 260)"/>
+  <use href="#leaf" x="62" y="150" width="40" height="80" transform="rotate(-30 82 190)"/>
+  <use href="#leaf" x="198" y="150" width="40" height="80" transform="rotate(30 218 190)"/>
+  <use href="#leaf" x="10" y="150" width="36" height="72" transform="rotate(-75 28 190)"/>
+  <use href="#leaf" x="254" y="150" width="36" height="72" transform="rotate(75 272 190)"/>
+  <use href="#blossom" x="8" y="120" width="62" height="62" transform="rotate(-15 39 151)"/>
+  <use href="#blossom" x="232" y="118" width="62" height="62" transform="rotate(20 263 149)"/>
+  <use href="#blossom" x="82" y="28" width="58" height="58" transform="rotate(10 111 57)"/>
+  <use href="#blossom" x="160" y="26" width="58" height="58" transform="rotate(-20 189 55)"/>
+  <use href="#rose" x="22" y="170" width="66" height="66"/>
+  <use href="#rose" x="212" y="172" width="66" height="66"/>
+  <use href="#rose" x="38" y="96" width="82" height="82"/>
+  <use href="#rose" x="180" y="98" width="82" height="82"/>
+  <use href="#rose" x="102" y="40" width="96" height="96"/>
+  <use href="#rose" x="106" y="136" width="88" height="88"/>
+  <use href="#blossom" x="64" y="196" width="46" height="46" transform="rotate(30 87 219)"/>
+  <use href="#blossom" x="190" y="198" width="46" height="46" transform="rotate(-25 213 221)"/>
+  <g fill="#fff"><circle cx="30" cy="100" r="3.5"/><circle cx="270" cy="98" r="3.5"/><circle cx="150" cy="30" r="3"/><circle cx="76" cy="52" r="2.5"/><circle cx="226" cy="54" r="2.5"/><circle cx="14" cy="200" r="3"/><circle cx="288" cy="198" r="3"/><circle cx="124" cy="24" r="2"/><circle cx="178" cy="22" r="2"/></g>
+  <path d="M96 296L204 296L172 378L128 378Z" fill="#f6e2d4" opacity=".95"/>
+  <path d="M96 296L204 296L196 312L104 312Z" fill="#fff" opacity=".35"/>
+  <path d="M138 296C108 266 92 298 112 310C126 318 140 306 150 300C160 306 174 318 188 310C208 298 192 266 162 296Z" fill="#e63950" stroke="#a8132b" stroke-width="2"/>
+  <path d="M146 304L128 346M154 304L172 346" stroke="#e63950" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="150" cy="300" r="9" fill="#c9254a"/>
+</svg>
+</template>
+
+<!-- Screen 1: Intro -->
+<section class="screen on" id="s1">
+  <div class="bqHolder"></div>
+  <h1 class="script" id="introTitle">A bouquet for someone special</h1>
+  <p class="sub" id="introSub">Every flower here carries a little piece of my heart.</p>
+  <button id="openBtn">Open with love ♥</button>
+</section>
+
+<!-- Screen 2: Form -->
+<section class="screen" id="s2">
+  <div class="card">
+    <h2 class="script">Write your greeting</h2>
+    <label for="to">Who is this for?</label>
+    <input id="to" maxlength="40" placeholder="Their name or nickname">
+    <label for="from">From</label>
+    <input id="from" maxlength="40" placeholder="Your name (or a secret admirer note)">
+    <label for="tpl">Pick a message idea (optional)</label>
+    <select id="tpl">
+      <option value="">— Write my own —</option>
+      <option>Every time I see you smile, my whole day gets brighter. These flowers could never match how beautiful you are to me.</option>
+      <option>I may not say it often, but you make my heart skip every single day. Will you let me love you a little more tomorrow?</option>
+      <option>You are my favorite hello and my hardest goodbye. I'm so happy to have you in my life.</option>
+      <option>I picked these roses for you, but honestly, you're the one who makes everything bloom.</option>
+    </select>
+    <label for="msg">Your message</label>
+    <textarea id="msg" maxlength="220" placeholder="Pour your heart out here…"></textarea>
+    <label>Flower color</label>
+    <div class="swatches" id="sws">
+      <button type="button" class="sw sel" data-c="red" style="background:#e63950" aria-label="Red"></button>
+      <button type="button" class="sw" data-c="pink" style="background:#f78fb3" aria-label="Pink"></button>
+      <button type="button" class="sw" data-c="peach" style="background:#ffa07a" aria-label="Peach"></button>
+      <button type="button" class="sw" data-c="purple" style="background:#a367dc" aria-label="Purple"></button>
+    </div>
+    <label for="pic">Add a photo (optional, shown only on your device)</label>
+    <input type="file" id="pic" accept="image/*">
+    <div class="err" id="err"></div>
+    <div class="center"><button id="makeBtn">Create my bouquet 🌹</button></div>
+  </div>
+</section>
+
+<!-- Screen 3: Result -->
+<section class="screen" id="s3">
+  <div class="bqHolder"></div>
+  <div class="letter">
+    <div class="to script" id="rTo"></div>
+    <img id="rPic" alt="" style="display:none">
+    <div class="msg" id="rMsg"></div>
+    <div class="from script" id="rFrom"></div>
+  </div>
+  <div class="actions" id="actSender">
+    <button id="copyBtn">Copy link to send 💌</button>
+    <button class="ghost" id="shareBtn">Share</button>
+    <button class="ghost" id="againBtn">Create another</button>
+  </div>
+  <div class="actions" id="actReceiver" style="display:none">
+    <button class="ghost" id="replyBtn">Send one back 🌹</button>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const PAL={red:['#ff6b81','#e63950','#a8132b'],pink:['#ffc2d4','#f78fb3','#c2456f'],peach:['#ffd0a8','#ffa07a','#d4603a'],purple:['#d6b3ff','#a367dc','#6a2fa8']};
+let color='red', data=null, photo='';
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');window.scrollTo(0,0)}
+function setColor(c){color=c;const p=PAL[c]||PAL.red;['--r1','--r2','--r3'].forEach((v,i)=>document.documentElement.style.setProperty(v,p[i]))}
+document.querySelectorAll('.bqHolder').forEach(h=>h.appendChild($('bqT').content.cloneNode(true)));
+
+function petals(n){
+  const cols=PAL[color];
+  for(let i=0;i<n;i++){
+    const p=document.createElement('div');p.className='petal';
+    p.style.left=Math.random()*100+'vw';p.style.background=cols[i%3];
+    p.style.setProperty('--dx',(Math.random()*160-80)+'px');
+    p.style.animationDuration=(5+Math.random()*5)+'s';p.style.animationDelay=Math.random()*3+'s';
+    document.body.appendChild(p);setTimeout(()=>p.remove(),12000);
+  }
+}
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2200)}
+
+const BASE=location.protocol==='file:'?location.href.split('#')[0]:'https://claude.ai/artifact/4rm1ToRUuFq5D3LWtcNuyU';
+async function pack(o){
+  const st=new Blob([JSON.stringify(o)]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+  const u=new Uint8Array(await new Response(st).arrayBuffer());let s='';u.forEach(x=>s+=String.fromCharCode(x));
+  return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+async function unpack(t){
+  const b=atob(t.replace(/-/g,'+').replace(/_/g,'/'));
+  const st=new Blob([Uint8Array.from(b,c=>c.charCodeAt(0))]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  return JSON.parse(await new Response(st).text());
+}
+async function link(){const a=await pack([data.to,data.from,data.msg,data.c]);return BASE+'#'+a}
+
+function render(d,receiver){
+  setColor(d.c);
+  $('rTo').textContent='Dear '+d.to+',';
+  $('rMsg').textContent=d.msg;
+  $('rFrom').textContent='— '+d.from;
+  const img=$('rPic');
+  if(!receiver&&photo){img.src=photo;img.style.display='block'}else img.style.display='none';
+  $('actSender').style.display=receiver?'none':'flex';
+  $('actReceiver').style.display=receiver?'flex':'none';
+  show('s3');petals(30);
+}
+
+$('sws').addEventListener('click',e=>{
+  const b=e.target.closest('.sw');if(!b)return;
+  document.querySelectorAll('.sw').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');setColor(b.dataset.c);
+});
+$('tpl').addEventListener('change',e=>{if(e.target.value)$('msg').value=e.target.value});
+$('pic').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f){photo='';return}
+  const r=new FileReader();r.onload=()=>photo=r.result;r.readAsDataURL(f);
+});
+$('openBtn').onclick=()=>{ if(data){render(data,true)}else{show('s2');petals(15)} };
+$('makeBtn').onclick=()=>{
+  const to=$('to').value.trim(),from=$('from').value.trim(),msg=$('msg').value.trim();
+  if(!to||!from||!msg){$('err').textContent='Please fill in the name, your name, and your message.';return}
+  $('err').textContent='';
+  data={to,from,msg,c:color};
+  render(data,false);
+};
+$('copyBtn').onclick=async()=>{
+  const l=await link();
+  try{await navigator.clipboard.writeText(l);toast('Link copied! Send it to your special someone 💕')}
+  catch(e){prompt('Copy this link:',l)}
+};
+$('shareBtn').onclick=async()=>{
+  const l=await link();
+  if(navigator.share)navigator.share({title:'A bouquet for you',text:'I made a bouquet for you 🌹',url:l}).catch(()=>{});
+  else $('copyBtn').click();
+};
+$('againBtn').onclick=()=>{data=null;photo='';['to','from','msg','pic'].forEach(i=>$(i).value='');$('tpl').value='';show('s2')};
+$('replyBtn').onclick=()=>{data=null;history.replaceState(null,'',location.pathname);show('s2')};
+
+(async function(){
+  petals(12);
+  if(location.hash.length>1){
+    try{
+      const a=await unpack(location.hash.slice(1));
+      data={to:a[0],from:a[1],msg:a[2],c:a[3]};setColor(data.c);
+      $('introTitle').textContent='A bouquet for '+data.to;
+      $('introSub').textContent='Someone special picked these flowers just for you.';
+    }catch(e){data=null}
+  }
+})();
+</script>
+</body>
+</html>
